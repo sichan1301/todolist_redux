@@ -1,25 +1,47 @@
-import logo from './logo.svg';
 import './App.css';
+import { useState } from "react";
+import { connect } from "react-redux";
+import { actionCreators } from "./store";
+import ToDO from "./todo";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+function App({todos,addTodo}) {
+  const [text,setText] = useState('')
+  const onChange = (e) =>{
+      setText(e.target.value)
+  }
+
+  const onSubmit = (e) =>{
+      e.preventDefault(onSubmit);
+      addTodo(text)
+      setText("")
+  }
+
+  return (    
+
+      <>
+          <h1>To do</h1>
+          <form onSubmit = {onSubmit}>
+              <input type ="text" value = {text} onChange={onChange}/>
+              <button>Add</button>
+          </form>
+          <ul>
+              {
+                  todos.map(todo => <ToDO {...todo} key={todo.id}/>)
+              }
+          </ul>
+      </>
+  )
 }
 
-export default App;
+
+const mapStateToProps = (state) =>{
+  return {todos:state};
+}
+
+const mapDispatchToProps = (dispatch) =>{   
+  return{
+      addTodo: (text) =>dispatch(actionCreators.addTodo(text))
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps) (App);
