@@ -1,27 +1,26 @@
 import './App.css';
 import { useState } from "react";
-import { connect } from "react-redux";
-import { actionCreators } from "./store";
+import { useSelector, useDispatch } from "react-redux";
+import { ADD } from "./store";
 import ToDO from "./todo";
 
-function App({todos,addTodo}) {
+function App() {
+
+  const todos = useSelector(state => state)
+  const dispatch = useDispatch()
   const [text,setText] = useState('')
-  const onChange = (e) =>{
-      setText(e.target.value)
-  }
 
   const onSubmit = (e) =>{
       e.preventDefault(onSubmit);
-      addTodo(text)
+      dispatch(ADD(text))
       setText("")
   }
 
   return (    
-
       <>
           <h1>To do</h1>
           <form onSubmit = {onSubmit}>
-              <input type ="text" value = {text} onChange={onChange}/>
+              <input type ="text" value = {text} onChange={(e)=>{setText(e.target.value)}}/>
               <button>Add</button>
           </form>
           <ul>
@@ -33,15 +32,4 @@ function App({todos,addTodo}) {
   )
 }
 
-
-const mapStateToProps = (state) =>{
-  return {todos:state};
-}
-
-const mapDispatchToProps = (dispatch) =>{   
-  return{
-      addTodo: (text) =>dispatch(actionCreators.addTodo(text))
-  }
-}
-
-export default connect(mapStateToProps,mapDispatchToProps) (App);
+export default App;
