@@ -39,21 +39,31 @@ import {v4 as uuidv4} from 'uuid';
 //         state.filter(item => item.id !== action.payload)
 // })
 
+export interface IState {
+    text:string,
+    id:string,
+    done:boolean
+}
+
+interface stateType {
+    todolist: IState[];
+}
 
 const todos = createSlice({
     name:"todosReducer",
-    initialState:[],
+    initialState:{todolist:[]},
     reducers:{
-        ADD:(state,action) => {
-            state.push({text:action.payload, id :uuidv4(), done:false});
+        ADD:(state: stateType,action) => {
+            state.todolist.push({text:action.payload, id :uuidv4(), done:false});
         },
-        DELETE:(state,action) =>
-            state.filter(item => item.id !== action.payload),
-        UPDATE: (state,action) =>{
-            state.map(item => item.id === action.payload.id ? item.text=action.payload.currentText: item)
+        DELETE:(state: stateType,action) => {
+            state.todolist = state.todolist.filter(item => item.id !== action.payload);
         },
-        COMPLETE:(state,action) =>{
-            state.map(item => item.id === action.payload ? item.done = !item.done: item)
+        UPDATE: (state: stateType,action) =>{
+            state.todolist.forEach(item => item.id === action.payload.id ? item.text=action.payload.currentText: item);
+        },
+        COMPLETE:(state: stateType,action) =>{
+            state.todolist.forEach(item => item.id === action.payload ? item.done = !item.done: item);
         }
 }})
 
@@ -61,4 +71,7 @@ const store = configureStore({reducer:todos.reducer})
 
 export const {ADD,DELETE,UPDATE,COMPLETE} = todos.actions
 
+export type RootState = ReturnType<typeof store.getState>;
+
 export default store;
+

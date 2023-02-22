@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { DELETE,UPDATE,COMPLETE} from "./store";
+import { IState } from "./store";
 
-const ToDO = ({text,id,done}) =>{
+const ToDO = ({text,id,done}:IState) =>{
     const dispatch = useDispatch(); 
 
     const [isEdit,setIsEdit] = useState(false);
@@ -18,6 +19,10 @@ const ToDO = ({text,id,done}) =>{
         handleIsEdit()
     }
 
+    useEffect(()=>{
+      console.log(id)
+    },[id])
+    
     return (
       <>
         {

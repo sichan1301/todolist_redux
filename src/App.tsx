@@ -1,21 +1,25 @@
 import './App.css';
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { ADD } from "./store";
+import { ADD,IState,RootState } from "./store";
 import ToDO from "./todo";
 
 function App() {
 
-  const todos = useSelector(state => state)
+  const todos = useSelector((state:RootState)=> state.todolist)
   const dispatch = useDispatch()
   const [text,setText] = useState('')
 
-  const onSubmit = (e) =>{
-      e.preventDefault(onSubmit);
+  const onSubmit = (e : React.FormEvent<HTMLFormElement>) =>{
+      e.preventDefault();
       dispatch(ADD(text))
       setText("")
   }
-
+  
+  useEffect(()=>{
+    console.log(todos)
+  },[todos])
+  
   return (    
       <>
           <h1>To do</h1>
@@ -25,7 +29,7 @@ function App() {
           </form>
           <ul>
               {
-                  todos.map(todo => <ToDO {...todo} key={todo.id}/>)
+                  todos.map((todo:IState) => <ToDO {...todo} key={todo.id}/>)
               }
           </ul>
       </>
